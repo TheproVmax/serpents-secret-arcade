@@ -2,131 +2,95 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Otherworld Trial</title>
+<title>Otherworld Saga</title>
 
 <style>
 
 body{
 margin:0;
 font-family:system-ui;
-background:black;
-overflow:hidden;
+background:#0b0f1a;
 color:white;
+overflow:hidden;
 }
 
-/* CINEMATIC LAYERS */
-.scene{
-position:relative;
+/* STAGE */
+.stage{
 height:100vh;
-width:100%;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+position:relative;
 }
 
-/* BACKGROUND FADE */
-.bg{
-position:absolute;
-inset:0;
-background:radial-gradient(circle,#1a1f2e,#05070f);
-opacity:0;
-animation:fadeIn 2s forwards;
-z-index:0;
-}
-
-@keyframes fadeIn{
-to{opacity:1;}
-}
-
-/* CUTSCENE TEXT */
-.cutscene{
-position:absolute;
-bottom:80px;
-width:80%;
-text-align:center;
-font-size:18px;
-opacity:0;
-animation:textIn 3s forwards;
-z-index:3;
-}
-
-@keyframes textIn{
-0%{opacity:0; transform:translateY(10px);}
-30%{opacity:1;}
-80%{opacity:1;}
-100%{opacity:0;}
-}
-
-/* CHARACTERS */
-.character{
-width:120px;
-height:120px;
-position:absolute;
-bottom:120px;
+/* SPRITES */
+.sprite{
+width:130px;
+height:130px;
 background-size:contain;
 background-repeat:no-repeat;
 background-position:center;
-z-index:2;
 }
 
-/* PLAYER SPRITE */
-.player{
-left:20%;
-background-image:url("https://i.imgur.com/3ZQ3Z4Q.png"); /* placeholder sprite */
-animation:playerEnter 2s ease forwards;
+/* fallback if image missing */
+.fallback{
+background:#2b2f3a;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
 }
 
-/* ENEMY SPRITE */
-.enemy{
-right:20%;
-background-image:url("https://i.imgur.com/9XqZ8xS.png"); /* placeholder serpent */
-opacity:0;
-animation:enemyEnter 2.5s ease forwards 1.5s;
-}
-
-@keyframes playerEnter{
-from{transform:translateX(-200px);}
-to{transform:translateX(0);}
-}
-
-@keyframes enemyEnter{
-from{opacity:0; transform:translateX(200px);}
-to{opacity:1; transform:translateX(0);}
+/* POSITIONS */
+.row{
+display:flex;
+gap:80px;
+align-items:center;
 }
 
 /* UI */
 .ui{
-position:absolute;
-bottom:20px;
-z-index:4;
+margin-top:20px;
 display:flex;
 gap:10px;
 flex-wrap:wrap;
 justify-content:center;
+max-width:500px;
 }
 
 button{
 padding:10px 14px;
 border:none;
 border-radius:8px;
+cursor:pointer;
 background:#1f2937;
 color:white;
-cursor:pointer;
 }
 
 button:hover{
 background:#374151;
 }
 
-/* FADE OVERLAY */
+/* DIALOGUE BOX */
+.dialogue{
+position:absolute;
+bottom:20px;
+width:80%;
+background:rgba(0,0,0,0.6);
+padding:12px;
+border-radius:10px;
+text-align:center;
+}
+
+/* FADE */
 .fade{
 position:absolute;
 inset:0;
 background:black;
-z-index:5;
 opacity:1;
-animation:fadeOut 2s forwards;
+animation:fadeOut 1.5s forwards;
 }
 
 @keyframes fadeOut{
@@ -139,24 +103,25 @@ to{opacity:0; pointer-events:none;}
 
 <body>
 
-<div class="scene">
+<div class="stage">
 
-<div class="bg"></div>
+<div class="row">
 
-<!-- CUTSCENE -->
-<div class="cutscene" id="cutscene">
-A ripple opens in the Otherworld… a Guardian awakens.
+<div id="player" class="sprite fallback">KIRAN</div>
+<div id="enemy" class="sprite fallback">GUARD</div>
+
 </div>
 
-<!-- CHARACTERS -->
-<div class="character player"></div>
-<div class="character enemy"></div>
-
-<!-- UI -->
 <div class="ui">
-<button onclick="attack()">Strike</button>
-<button onclick="spell()">Serpent Flame</button>
-<button onclick="heal()">Blessing</button>
+
+<button onclick="attack()">Attack</button>
+<button onclick="fire()">Serpent Flame</button>
+<button onclick="heal()">Heal</button>
+
+</div>
+
+<div class="dialogue" id="dialogue">
+A Guardian of the Otherworld stands before you...
 </div>
 
 <div class="fade"></div>
@@ -165,63 +130,88 @@ A ripple opens in the Otherworld… a Guardian awakens.
 
 <script>
 
-let phase = 0;
-let hp = 100;
-let enemy = 120;
+/* STORY SYSTEM */
+let chapter = 1;
 
-setTimeout(()=>{
-phase = 1;
-},3000);
+const bosses = [
+{
+name:"Serpent Gate Guardian",
+hp:80,
+dialogue:[
+"Beyond this gate lies the Otherworld.",
+"Turn back… or be judged."
+]
+},
+{
+name:"Nagini Court Warden",
+hp:120,
+dialogue:[
+"The Court does not accept intruders.",
+"Your power will be tested."
+]
+},
+{
+name:"Serpent Queen (Final Form)",
+hp:180,
+dialogue:[
+"So you have reached me…",
+"The Otherworld bows to none."
+]
+}
+];
 
-/* CUTSCENE TEXT SYSTEM */
-function showText(text){
-const c = document.getElementById("cutscene");
-c.innerText = text;
-c.style.animation="none";
-void c.offsetWidth;
-c.style.animation="textIn 3s forwards";
+let boss = {...bosses[0]};
+
+/* INIT */
+function updateDialogue(text){
+document.getElementById("dialogue").innerText = text;
 }
 
-/* ATTACKS */
-
+/* COMBAT */
 function attack(){
-enemy -= 15;
-showText("You strike the Guardian of the Otherworld");
+boss.hp -= 15;
+updateDialogue("You strike " + boss.name);
 
-enemyTurn();
+next();
 }
 
-function spell(){
-enemy -= 25;
-showText("Serpent Flame burns through the realm");
+function fire(){
+boss.hp -= 25;
+updateDialogue("Serpent Flame burns the enemy");
 
-enemyTurn();
+next();
 }
 
 function heal(){
-hp += 20;
-showText("The Otherworld restores your strength");
+updateDialogue("You restore your strength");
 
-enemyTurn();
+next();
 }
 
-/* ENEMY AI */
+/* BOSS AI */
 function enemyTurn(){
 
-if(enemy <= 0){
-showText("The Guardian collapses… the path opens.");
+updateDialogue(boss.name + " attacks!");
+
+}
+
+/* PROGRESSION SYSTEM */
+function next(){
+
+if(boss.hp <= 0){
+chapter++;
+
+if(chapter > bosses.length){
+updateDialogue("You have freed the Otherworld.");
 return;
 }
 
-let dmg = phase ? 18 : 10;
-
-hp -= dmg;
-
-showText("The Guardian strikes back!");
-
-if(hp <= 0){
-showText("You were lost in the Otherworld...");
+boss = {...bosses[chapter-1]};
+updateDialogue("A new force appears: " + boss.name);
+return;
 }
+
+enemyTurn();
 
 }
 
