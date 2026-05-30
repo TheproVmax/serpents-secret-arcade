@@ -9,259 +9,221 @@
 body{
 margin:0;
 font-family:system-ui;
-background:linear-gradient(#0d1320,#05070f);
-color:white;
+background:black;
 overflow:hidden;
+color:white;
 }
 
-/* STAGE */
-.screen{
+/* CINEMATIC LAYERS */
+.scene{
+position:relative;
 height:100vh;
+width:100%;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:10px;
-position:relative;
+}
+
+/* BACKGROUND FADE */
+.bg{
+position:absolute;
+inset:0;
+background:radial-gradient(circle,#1a1f2e,#05070f);
+opacity:0;
+animation:fadeIn 2s forwards;
+z-index:0;
+}
+
+@keyframes fadeIn{
+to{opacity:1;}
+}
+
+/* CUTSCENE TEXT */
+.cutscene{
+position:absolute;
+bottom:80px;
+width:80%;
+text-align:center;
+font-size:18px;
+opacity:0;
+animation:textIn 3s forwards;
+z-index:3;
+}
+
+@keyframes textIn{
+0%{opacity:0; transform:translateY(10px);}
+30%{opacity:1;}
+80%{opacity:1;}
+100%{opacity:0;}
+}
+
+/* CHARACTERS */
+.character{
+width:120px;
+height:120px;
+position:absolute;
+bottom:120px;
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
 z-index:2;
 }
 
-/* HERO + ENEMY */
-.row{
-display:flex;
-gap:80px;
-align-items:center;
-}
-
-.sprite{
-width:110px;
-height:110px;
-border-radius:14px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:600;
-}
-
-/* HERO = KIRANMALA-STYLE PROTAGONIST */
+/* PLAYER SPRITE */
 .player{
-background:#3b82f6;
+left:20%;
+background-image:url("https://i.imgur.com/3ZQ3Z4Q.png"); /* placeholder sprite */
+animation:playerEnter 2s ease forwards;
 }
 
-/* SERPENT GUARDIANS / OTHERWORLD CREATURES */
+/* ENEMY SPRITE */
 .enemy{
-background:#7c2d12;
+right:20%;
+background-image:url("https://i.imgur.com/9XqZ8xS.png"); /* placeholder serpent */
+opacity:0;
+animation:enemyEnter 2.5s ease forwards 1.5s;
+}
+
+@keyframes playerEnter{
+from{transform:translateX(-200px);}
+to{transform:translateX(0);}
+}
+
+@keyframes enemyEnter{
+from{opacity:0; transform:translateX(200px);}
+to{opacity:1; transform:translateX(0);}
 }
 
 /* UI */
 .ui{
+position:absolute;
+bottom:20px;
+z-index:4;
 display:flex;
-flex-wrap:wrap;
 gap:10px;
+flex-wrap:wrap;
 justify-content:center;
-margin-top:10px;
-max-width:420px;
 }
 
 button{
 padding:10px 14px;
 border:none;
 border-radius:8px;
-cursor:pointer;
 background:#1f2937;
 color:white;
+cursor:pointer;
 }
 
 button:hover{
 background:#374151;
 }
 
-/* LOG */
-.log{
-margin-top:10px;
-opacity:0.8;
-font-size:14px;
-text-align:center;
-max-width:400px;
-}
-
-/* HIT EFFECT */
-.hit{
-animation:shake 0.3s;
-}
-
-@keyframes shake{
-0%{transform:translateX(0);}
-25%{transform:translateX(-5px);}
-50%{transform:translateX(5px);}
-75%{transform:translateX(-5px);}
-100%{transform:translateX(0);}
-}
-
-/* DAMAGE POPUP */
-.damage{
+/* FADE OVERLAY */
+.fade{
 position:absolute;
-color:#facc15;
-font-weight:bold;
-animation:floatUp 1s forwards;
+inset:0;
+background:black;
+z-index:5;
+opacity:1;
+animation:fadeOut 2s forwards;
 }
 
-@keyframes floatUp{
-0%{opacity:1; transform:translateY(0);}
-100%{opacity:0; transform:translateY(-50px);}
+@keyframes fadeOut{
+to{opacity:0; pointer-events:none;}
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="screen">
+<div class="scene">
 
-<div class="row">
-<div id="player" class="sprite player">Kiranmala</div>
-<div id="enemy" class="sprite enemy">Serpent Guard</div>
+<div class="bg"></div>
+
+<!-- CUTSCENE -->
+<div class="cutscene" id="cutscene">
+A ripple opens in the Otherworld… a Guardian awakens.
 </div>
 
-<div>
-HP: <span id="php">100</span> |
-Guardian HP: <span id="ehp">120</span> |
-Mana: <span id="mana">60</span>
-</div>
+<!-- CHARACTERS -->
+<div class="character player"></div>
+<div class="character enemy"></div>
 
+<!-- UI -->
 <div class="ui">
-
-<button onclick="attack()">Serpent Strike</button>
-<button onclick="fire()">Serpent Flame</button>
-<button onclick="lightning()">Star Sigil</button>
-<button onclick="heal()">Royal Blessing</button>
-
+<button onclick="attack()">Strike</button>
+<button onclick="spell()">Serpent Flame</button>
+<button onclick="heal()">Blessing</button>
 </div>
 
-<div class="log" id="log">
-A Guardian of the Otherworld blocks your path...
-</div>
+<div class="fade"></div>
 
 </div>
 
 <script>
 
-let playerHP = 100;
-let enemyHP = 120;
-let mana = 60;
+let phase = 0;
+let hp = 100;
+let enemy = 120;
 
-let phase = 1;
+setTimeout(()=>{
+phase = 1;
+},3000);
 
-/* UI */
-function update(){
-document.getElementById("php").innerText = playerHP;
-document.getElementById("ehp").innerText = enemyHP;
-document.getElementById("mana").innerText = mana;
-
-/* BOSS PHASE SHIFT */
-if(enemyHP < 60 && phase === 1){
-phase = 2;
-log("The Guardian awakens its true form...");
-}
+/* CUTSCENE TEXT SYSTEM */
+function showText(text){
+const c = document.getElementById("cutscene");
+c.innerText = text;
+c.style.animation="none";
+void c.offsetWidth;
+c.style.animation="textIn 3s forwards";
 }
 
-/* LOG */
-function log(t){
-document.getElementById("log").innerText = t;
-}
-
-/* DAMAGE EFFECT */
-function damage(x, target){
-const el = document.createElement("div");
-el.className="damage";
-el.innerText="-" + x;
-
-document.body.appendChild(el);
-
-const r = target.getBoundingClientRect();
-el.style.left = r.left + "px";
-el.style.top = r.top + "px";
-
-setTimeout(()=>el.remove(),900);
-}
-
-/* HIT ANIMATION */
-function hit(el){
-el.classList.add("hit");
-setTimeout(()=>el.classList.remove("hit"),300);
-}
-
-/* ATTACKS (THEMED) */
+/* ATTACKS */
 
 function attack(){
-enemyHP -= 15;
-hit(document.getElementById("enemy"));
-damage(15, document.getElementById("enemy"));
-log("You unleash a Serpent Strike!");
+enemy -= 15;
+showText("You strike the Guardian of the Otherworld");
+
 enemyTurn();
-update();
 }
 
-function fire(){
-if(mana < 10) return log("Not enough energy from the Otherworld");
-mana -= 10;
+function spell(){
+enemy -= 25;
+showText("Serpent Flame burns through the realm");
 
-enemyHP -= 22;
-hit(document.getElementById("enemy"));
-damage(22, document.getElementById("enemy"));
-
-log("You cast Serpent Flame!");
 enemyTurn();
-update();
-}
-
-function lightning(){
-if(mana < 15) return log("Star energy is weak");
-
-mana -= 15;
-enemyHP -= 28;
-
-hit(document.getElementById("enemy"));
-damage(28, document.getElementById("enemy"));
-
-log("Star Sigil strikes the Guardian!");
-enemyTurn();
-update();
 }
 
 function heal(){
-mana -= 10;
-playerHP += 20;
+hp += 20;
+showText("The Otherworld restores your strength");
 
-log("The Otherworld restores your strength");
 enemyTurn();
-update();
 }
 
 /* ENEMY AI */
 function enemyTurn(){
 
-if(enemyHP <= 0){
-log("The Guardian has fallen. The path opens...");
+if(enemy <= 0){
+showText("The Guardian collapses… the path opens.");
 return;
 }
 
-let dmg = phase === 1 ? 12 : 20;
+let dmg = phase ? 18 : 10;
 
-playerHP -= dmg;
+hp -= dmg;
 
-hit(document.getElementById("player"));
-log("The Guardian attacks from the Otherworld!");
+showText("The Guardian strikes back!");
 
-update();
-
-if(playerHP <= 0){
-log("You were consumed by the Otherworld...");
+if(hp <= 0){
+showText("You were lost in the Otherworld...");
 }
 
 }
-
-update();
 
 </script>
 
