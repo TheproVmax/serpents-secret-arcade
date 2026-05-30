@@ -1,153 +1,115 @@
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* BASE */
 body {
-  font-family: 'Cinzel', serif;
-  background: #0b0b14;
-  color: white;
-  overflow: hidden;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1b1b33 0%, #0c0c14 70%);
+  color: #f4f2ee;
+  font-family: "Georgia", "Times New Roman", serif;
 }
 
-/* Fog */
-#fog {
-  position: fixed;
-  inset: 0;
-  background: url("assets/fog.png") repeat;
-  opacity: 0.25;
-  animation: fogMove 60s linear infinite;
-  z-index: 0;
+/* SCREENS */
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 60px 20px;
 }
 
-@keyframes fogMove {
-  from { background-position: 0 0; }
-  to { background-position: 1000px 0; }
-}
-
-/* Title Screen */
-#title-screen {
-  position: absolute;
-  inset: 0;
+.screen.active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  z-index: 2;
 }
 
-#title-screen h1 {
-  font-size: 48px;
-  letter-spacing: 2px;
+/* HOME */
+.home-inner {
+  margin-top: 18vh;
+  text-align: center;
+  max-width: 500px;
 }
 
-#startBtn {
-  font-size: 18px;
-  padding: 12px 28px;
-  background: #7b1fa2;
-  border: none;
-  color: white;
+.title {
+  font-size: 3.2rem;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+
+/* BUTTONS */
+button {
+  font-family: inherit;
   cursor: pointer;
+}
+
+.primary-btn {
+  padding: 14px 34px;
+  font-size: 1.05rem;
+  background: linear-gradient(180deg, #5b3fa6, #3b2a6d);
+  color: #ffffff;
+  border: none;
   border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-/* Hero Walk */
-#hero {
-  width: 160px;
-  position: relative;
-  animation: walkIn 2.5s ease forwards;
+.primary-btn:hover {
+  transform: translateY(-1px);
 }
 
-@keyframes walkIn {
-  from { transform: translateX(-300px); }
-  to { transform: translateX(0); }
+/* GAME SELECT */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
 }
 
-/* Game Screen */
-.hidden {
-  display: none;
-}
-
-#game-screen {
-  position: absolute;
-  inset: 0;
-  padding-top: 80px;
-}
-
-/* HUD */
-#hud {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 10;
-}
-
-.health-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0,0,0,0.6);
-  padding: 12px 16px;
-  border-radius: 12px;
-}
-
-.health-label {
-  font-weight: bold;
-}
-
-.health-bar-bg {
-  width: 260px;
-  height: 24px;
-  background: #333;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid #111;
-}
-
-#player-health-bar {
-  height: 100%;
+.game-grid {
   width: 100%;
-  background: linear-gradient(to right, #ff4d4d, #b30000);
-  transition: width 0.3s ease;
+  max-width: 700px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 30px;
 }
 
-#health-text {
-  font-size: 14px;
-}
-
-/* Battle */
-#battle-area {
-  margin-top: 120px;
+.game-card {
+  padding: 22px;
+  background: linear-gradient(180deg, #1f1f34, #141422);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  color: #f4f2ee;
+  font-size: 1rem;
   text-align: center;
 }
 
-.battle-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
+.game-card:hover {
+  background: linear-gradient(180deg, #2a2a4a, #1a1a2e);
 }
 
-.battle-buttons button {
-  padding: 12px 20px;
-  font-size: 16px;
-  background: #222;
-  color: white;
-  border: 2px solid #555;
-  cursor: pointer;
-  border-radius: 8px;
+/* BACK BUTTON */
+.back-btn {
+  padding: 10px 24px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #f4f2ee;
+  border-radius: 6px;
 }
 
-/* Mobile */
+/* MOBILE */
 @media (max-width: 600px) {
-  #title-screen h1 {
-    font-size: 32px;
+  .title {
+    font-size: 2.4rem;
   }
 
-  .health-bar-bg {
-    width: 180px;
-    height: 20px;
+  .home-inner {
+    margin-top: 14vh;
   }
 }
