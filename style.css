@@ -78,3 +78,46 @@ transform:translateY(-1px);
 button:active{
 transform:translateY(0px);
 }
+
+.title-screen,
+.menu{
+position:relative;
+z-index:1;
+
+height:100vh;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+text-align:center;
+padding:20px;
+}
+
+/* hidden state */
+.hidden{
+display:none;
+}
+
+/* fade animations */
+.fadeOut{
+opacity:0;
+transition:0.6s ease;
+}
+
+.fadeIn{
+animation:fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* smaller subtitle feel */
+.title-screen p{
+opacity:0.6;
+font-size:14px;
+margin-top:10px;
+}
