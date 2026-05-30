@@ -8,8 +8,10 @@
 
 <body>
 
+<!-- PARTICLES BACKGROUND -->
 <canvas id="particles"></canvas>
 
+<!-- MAIN UI -->
 <div class="hero">
 
 <div class="glow"></div>
@@ -18,11 +20,11 @@
 
 <p>
 A hidden realm inspired by The Serpent’s Secret.
-Step into the Otherworld.
+Enter the Otherworld and complete the trials.
 </p>
 
 <div class="buttons">
-<button onclick="start()">Start Adventure</button>
+<button onclick="startGame()">Start Adventure</button>
 <button onclick="continueGame()">Continue</button>
 </div>
 
@@ -31,7 +33,7 @@ Step into the Otherworld.
 <script src="engine.js"></script>
 
 <script>
-function start(){
+function startGame(){
 localStorage.setItem("save", JSON.stringify({
 hp:100,
 level:1,
@@ -46,6 +48,7 @@ if(!localStorage.getItem("save")){
 alert("No save found");
 return;
 }
+
 window.location.href="world/map.html";
 }
 </script>
