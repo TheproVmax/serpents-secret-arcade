@@ -1,54 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>The Serpent's Secret RPG</title>
+  <meta charset="UTF-8">
+  <title>The Serpent’s Secret</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Game-like font -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Fog Background -->
-<div id="fog"></div>
-
-<!-- Title Screen -->
-<div id="title-screen">
-  <img id="hero" src="assets/kiran.png" alt="Hero">
-
-  <h1>The Serpent's Secret</h1>
-  <button id="startBtn">Start Game</button>
-</div>
-
-<!-- Game Screen -->
-<div id="game-screen" class="hidden">
-
-  <!-- HUD -->
-  <div id="hud">
-    <div class="health-container">
-      <span class="health-label">HP</span>
-      <div class="health-bar-bg">
-        <div id="player-health-bar"></div>
-      </div>
-      <span id="health-text">100 / 100</span>
+  <!-- HOME SCREEN -->
+  <section id="home" class="screen active">
+    <div class="home-inner">
+      <h1 class="title">The Serpent’s Secret</h1>
+      <p class="subtitle">A Mythic Adventure Awaits</p>
+      <button class="primary-btn" onclick="goToGames()">Start Adventure</button>
     </div>
-  </div>
+  </section>
 
-  <!-- Battle Area -->
-  <div id="battle-area">
-    <p id="battle-text">A wild enemy appears!</p>
+  <!-- GAME SELECT -->
+  <section id="games" class="screen">
+    <h2 class="section-title">Choose Your Path</h2>
 
-    <div class="battle-buttons">
-      <button onclick="takeDamage(15)">Attack</button>
-      <button onclick="heal(10)">Heal</button>
+    <div class="game-grid">
+      <button class="game-card">Realm of Serpents</button>
+      <button class="game-card">Sky Kingdom</button>
+      <button class="game-card">Underworld Trials</button>
+      <button class="game-card">Final Battle</button>
     </div>
-  </div>
 
-</div>
+    <button class="back-btn" onclick="goHome()">Back</button>
+  </section>
 
-<script src="engine.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
