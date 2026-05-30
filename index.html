@@ -10,15 +10,23 @@
 
 <canvas id="particles"></canvas>
 
-<div class="menu">
+<!-- TITLE SCREEN -->
+<div class="title-screen" id="titleScreen">
 
 <h1>Serpent’s Secret Arcade</h1>
 
-<p>A small collection of trials</p>
+<p>Press any key to begin</p>
+
+</div>
+
+<!-- MENU (hidden until key press) -->
+<div class="menu hidden" id="menu">
+
+<h1>Serpent’s Secret Arcade</h1>
 
 <div class="buttons">
 
-<button onclick="startGame()">Start</button>
+<button onclick="startGame()">New Game</button>
 <button onclick="continueGame()">Continue</button>
 
 </div>
@@ -28,6 +36,25 @@
 <script src="engine.js"></script>
 
 <script>
+
+let started = false;
+
+document.addEventListener("keydown", start);
+document.addEventListener("click", start);
+
+function start(){
+if(started) return;
+started = true;
+
+document.getElementById("titleScreen").classList.add("fadeOut");
+
+setTimeout(()=>{
+document.getElementById("titleScreen").style.display="none";
+document.getElementById("menu").classList.remove("hidden");
+document.getElementById("menu").classList.add("fadeIn");
+},600);
+}
+
 function startGame(){
 localStorage.setItem("save", JSON.stringify({
 hp:100,
@@ -46,6 +73,7 @@ return;
 
 window.location.href="world/map.html";
 }
+
 </script>
 
 </body>
