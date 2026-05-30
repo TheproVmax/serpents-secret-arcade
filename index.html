@@ -9,27 +9,26 @@
 <body>
 
 <canvas id="particles"></canvas>
+<canvas id="fog"></canvas>
 
-<!-- TITLE SCREEN -->
+<!-- CHARACTER -->
+<div class="character" id="character"></div>
+
+<!-- TITLE -->
 <div class="title-screen" id="titleScreen">
 
 <h1>Serpent’s Secret Arcade</h1>
-
 <p>Press any key to begin</p>
 
 </div>
 
-<!-- MENU (hidden until key press) -->
+<!-- MENU -->
 <div class="menu hidden" id="menu">
 
 <h1>Serpent’s Secret Arcade</h1>
 
-<div class="buttons">
-
-<button onclick="startGame()">New Game</button>
+<button onclick="startGame()">Start Adventure</button>
 <button onclick="continueGame()">Continue</button>
-
-</div>
 
 </div>
 
@@ -46,13 +45,12 @@ function start(){
 if(started) return;
 started = true;
 
-document.getElementById("titleScreen").classList.add("fadeOut");
+document.getElementById("titleScreen").style.opacity = "0";
 
 setTimeout(()=>{
 document.getElementById("titleScreen").style.display="none";
 document.getElementById("menu").classList.remove("hidden");
-document.getElementById("menu").classList.add("fadeIn");
-},600);
+},800);
 }
 
 function startGame(){
@@ -70,7 +68,6 @@ if(!localStorage.getItem("save")){
 alert("No save found");
 return;
 }
-
 window.location.href="world/map.html";
 }
 
