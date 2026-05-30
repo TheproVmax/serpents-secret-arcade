@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RPG Battle</title>
+<title>Otherworld Trial</title>
 
 <style>
 
 body{
 margin:0;
 font-family:system-ui;
-background:#141824;
+background:linear-gradient(#0d1320,#05070f);
 color:white;
-text-align:center;
+overflow:hidden;
 }
 
+/* STAGE */
 .screen{
 height:100vh;
 display:flex;
@@ -21,34 +22,45 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 gap:10px;
+position:relative;
+z-index:2;
 }
 
+/* HERO + ENEMY */
 .row{
 display:flex;
-gap:40px;
+gap:80px;
 align-items:center;
 }
 
-.box{
-width:90px;
-height:90px;
-border-radius:10px;
+.sprite{
+width:110px;
+height:110px;
+border-radius:14px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-weight:bold;
+font-weight:600;
 }
 
-.player{background:#3b82f6;}
-.enemy{background:#ef4444;}
+/* HERO = KIRANMALA-STYLE PROTAGONIST */
+.player{
+background:#3b82f6;
+}
 
+/* SERPENT GUARDIANS / OTHERWORLD CREATURES */
+.enemy{
+background:#7c2d12;
+}
+
+/* UI */
 .ui{
-margin-top:20px;
 display:flex;
-gap:10px;
 flex-wrap:wrap;
+gap:10px;
 justify-content:center;
-max-width:500px;
+margin-top:10px;
+max-width:420px;
 }
 
 button{
@@ -56,23 +68,50 @@ padding:10px 14px;
 border:none;
 border-radius:8px;
 cursor:pointer;
-background:#2a2f3f;
+background:#1f2937;
 color:white;
 }
 
 button:hover{
-background:#3a425a;
+background:#374151;
 }
 
+/* LOG */
 .log{
-margin-top:15px;
+margin-top:10px;
 opacity:0.8;
 font-size:14px;
+text-align:center;
 max-width:400px;
 }
 
-</style>
+/* HIT EFFECT */
+.hit{
+animation:shake 0.3s;
+}
 
+@keyframes shake{
+0%{transform:translateX(0);}
+25%{transform:translateX(-5px);}
+50%{transform:translateX(5px);}
+75%{transform:translateX(-5px);}
+100%{transform:translateX(0);}
+}
+
+/* DAMAGE POPUP */
+.damage{
+position:absolute;
+color:#facc15;
+font-weight:bold;
+animation:floatUp 1s forwards;
+}
+
+@keyframes floatUp{
+0%{opacity:1; transform:translateY(0);}
+100%{opacity:0; transform:translateY(-50px);}
+}
+
+</style>
 </head>
 
 <body>
@@ -80,142 +119,145 @@ max-width:400px;
 <div class="screen">
 
 <div class="row">
-<div class="box player">YOU</div>
-<div class="box enemy" id="enemyBox">SLIME</div>
+<div id="player" class="sprite player">Kiranmala</div>
+<div id="enemy" class="sprite enemy">Serpent Guard</div>
 </div>
 
 <div>
 HP: <span id="php">100</span> |
-Enemy HP: <span id="ehp">60</span> |
-Mana: <span id="mana">50</span>
+Guardian HP: <span id="ehp">120</span> |
+Mana: <span id="mana">60</span>
 </div>
 
 <div class="ui">
 
-<button onclick="attack()">Attack</button>
-<button onclick="fire()">Fire</button>
-<button onclick="lightning()">Lightning</button>
-<button onclick="heal()">Heal</button>
-<button onclick="poison()">Poison</button>
-<button onclick="stun()">Stun</button>
+<button onclick="attack()">Serpent Strike</button>
+<button onclick="fire()">Serpent Flame</button>
+<button onclick="lightning()">Star Sigil</button>
+<button onclick="heal()">Royal Blessing</button>
 
 </div>
 
-<div class="log" id="log">Battle begins...</div>
+<div class="log" id="log">
+A Guardian of the Otherworld blocks your path...
+</div>
 
 </div>
 
 <script>
 
 let playerHP = 100;
-let enemyHP = 60;
-let mana = 50;
+let enemyHP = 120;
+let mana = 60;
 
-let enemyStunned = 0;
-let enemyPoison = 0;
+let phase = 1;
 
+/* UI */
 function update(){
 document.getElementById("php").innerText = playerHP;
 document.getElementById("ehp").innerText = enemyHP;
 document.getElementById("mana").innerText = mana;
+
+/* BOSS PHASE SHIFT */
+if(enemyHP < 60 && phase === 1){
+phase = 2;
+log("The Guardian awakens its true form...");
+}
 }
 
+/* LOG */
 function log(t){
 document.getElementById("log").innerText = t;
 }
 
-/* BASIC ATTACK */
-function attack(){
-enemyHP -= 10;
-log("You attack!");
+/* DAMAGE EFFECT */
+function damage(x, target){
+const el = document.createElement("div");
+el.className="damage";
+el.innerText="-" + x;
 
-endTurn();
+document.body.appendChild(el);
+
+const r = target.getBoundingClientRect();
+el.style.left = r.left + "px";
+el.style.top = r.top + "px";
+
+setTimeout(()=>el.remove(),900);
 }
 
-/* SPELLS */
-function fire(){
-if(mana < 10) return log("Not enough mana");
-mana -= 10;
+/* HIT ANIMATION */
+function hit(el){
+el.classList.add("hit");
+setTimeout(()=>el.classList.remove("hit"),300);
+}
+
+/* ATTACKS (THEMED) */
+
+function attack(){
 enemyHP -= 15;
-log("Fire spell!");
-endTurn();
+hit(document.getElementById("enemy"));
+damage(15, document.getElementById("enemy"));
+log("You unleash a Serpent Strike!");
+enemyTurn();
+update();
+}
+
+function fire(){
+if(mana < 10) return log("Not enough energy from the Otherworld");
+mana -= 10;
+
+enemyHP -= 22;
+hit(document.getElementById("enemy"));
+damage(22, document.getElementById("enemy"));
+
+log("You cast Serpent Flame!");
+enemyTurn();
+update();
 }
 
 function lightning(){
-if(mana < 15) return log("Not enough mana");
+if(mana < 15) return log("Star energy is weak");
+
 mana -= 15;
-enemyHP -= 20;
-enemyStunned = 1;
-log("Lightning hits and stuns!");
-endTurn();
+enemyHP -= 28;
+
+hit(document.getElementById("enemy"));
+damage(28, document.getElementById("enemy"));
+
+log("Star Sigil strikes the Guardian!");
+enemyTurn();
+update();
 }
 
 function heal(){
-if(mana < 10) return log("Not enough mana");
 mana -= 10;
 playerHP += 20;
-log("You heal yourself!");
-endTurn();
-}
 
-function poison(){
-if(mana < 12) return log("Not enough mana");
-mana -= 12;
-enemyPoison = 3;
-log("Enemy poisoned!");
-endTurn();
-}
-
-function stun(){
-if(mana < 8) return log("Not enough mana");
-mana -= 8;
-enemyStunned = 2;
-log("Enemy stunned!");
-endTurn();
+log("The Otherworld restores your strength");
+enemyTurn();
+update();
 }
 
 /* ENEMY AI */
 function enemyTurn(){
 
-if(enemyHP <= 0) return;
-
-if(enemyStunned > 0){
-enemyStunned--;
-log("Enemy is stunned!");
+if(enemyHP <= 0){
+log("The Guardian has fallen. The path opens...");
 return;
 }
 
-/* poison damage */
-if(enemyPoison > 0){
-enemyHP -= 5;
-enemyPoison--;
-}
+let dmg = phase === 1 ? 12 : 20;
 
-/* attack */
-playerHP -= 12;
-log("Enemy attacks!");
+playerHP -= dmg;
 
-}
-
-/* TURN SYSTEM */
-function endTurn(){
+hit(document.getElementById("player"));
+log("The Guardian attacks from the Otherworld!");
 
 update();
-
-if(enemyHP <= 0){
-log("Enemy defeated!");
-return;
-}
 
 if(playerHP <= 0){
-log("You lost...");
-return;
+log("You were consumed by the Otherworld...");
 }
-
-setTimeout(()=>{
-enemyTurn();
-update();
-},600);
 
 }
 
