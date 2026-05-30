@@ -2,64 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Serpent's Secret Arcade</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
+
 <body>
 
+<canvas id="particles"></canvas>
+
 <div class="hero">
+
+<div class="glow"></div>
 
 <h1>Serpent's Secret Arcade</h1>
 
 <p>
-Inspired by The Serpent's Secret
+A hidden realm inspired by The Serpent’s Secret.
+Step into the Otherworld.
 </p>
 
-<button onclick="newGame()">
-Start Adventure
-</button>
-
-<button onclick="continueGame()">
-Continue
-</button>
+<div class="buttons">
+<button onclick="start()">Start Adventure</button>
+<button onclick="continueGame()">Continue</button>
+</div>
 
 </div>
 
+<script src="engine.js"></script>
+
 <script>
-
-function newGame(){
-
-localStorage.setItem(
-"save",
-JSON.stringify({
-level:1,
+function start(){
+localStorage.setItem("save", JSON.stringify({
 hp:100,
-xp:0,
+level:1,
 area:"map"
-})
-);
+}));
 
 window.location.href="world/map.html";
-
 }
 
 function continueGame(){
-
-const save = localStorage.getItem("save");
-
-if(!save){
-alert("No save found.");
+if(!localStorage.getItem("save")){
+alert("No save found");
 return;
 }
-
 window.location.href="world/map.html";
-
 }
-
 </script>
 
 </body>
