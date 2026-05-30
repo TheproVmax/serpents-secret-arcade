@@ -8,23 +8,18 @@
 
 <body>
 
-<!-- PARTICLES BACKGROUND -->
 <canvas id="particles"></canvas>
 
-<!-- MAIN UI -->
 <div class="hero">
 
-<div class="glow"></div>
-
-<h1>Serpent's Secret Arcade</h1>
+<h1>Serpent’s Secret Arcade</h1>
 
 <p>
-A hidden realm inspired by The Serpent’s Secret.
-Enter the Otherworld and complete the trials.
+A quiet doorway into another world.
 </p>
 
 <div class="buttons">
-<button onclick="startGame()">Start Adventure</button>
+<button onclick="startGame()">Start</button>
 <button onclick="continueGame()">Continue</button>
 </div>
 
@@ -48,7 +43,6 @@ if(!localStorage.getItem("save")){
 alert("No save found");
 return;
 }
-
 window.location.href="world/map.html";
 }
 </script>
