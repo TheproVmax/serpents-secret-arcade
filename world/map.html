@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>World Map</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+
+.node{
+
+width:120px;
+height:120px;
+
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:#243b55;
+
+position:absolute;
+
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>World Map</h1>
+
+<div class="node"
+style="left:100px;top:200px"
+onclick="go('battle')">
+Battle
+</div>
+
+<div class="node"
+style="left:300px;top:120px"
+onclick="go('stacker')">
+Stack
+</div>
+
+<div class="node"
+style="left:500px;top:200px"
+onclick="go('platformer')">
+Escape
+</div>
+
+<div class="node"
+style="left:700px;top:120px"
+onclick="go('draw')">
+Draw
+</div>
+
+<script>
+
+function go(game){
+
+window.location.href=
+"../games/"+game+".html";
+
+}
+
+</script>
+
+</body>
+</html>
