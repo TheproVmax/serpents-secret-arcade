@@ -1,60 +1,75 @@
-(function(){
+window.addEventListener("load", () => {
 
-function startParticles(){
-
+/* PARTICLES */
 const canvas = document.getElementById("particles");
-if(!canvas) return;
-
+if(canvas){
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let particles = [];
+let p = [];
 
-for(let i=0;i<70;i++){
-particles.push({
+for(let i=0;i<60;i++){
+p.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
-r:Math.random()*2+1,
-dx:(Math.random()-0.5)*0.3,
-dy:(Math.random()-0.5)*0.3
+r:Math.random()*2,
+dx:(Math.random()-0.5)*0.2,
+dy:(Math.random()-0.5)*0.2
 });
 }
 
-function animate(){
-
+function draw(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-for(let p of particles){
+for(let i of p){
+i.x += i.dx;
+i.y += i.dy;
 
-p.x += p.dx;
-p.y += p.dy;
-
-if(p.x<0||p.x>canvas.width)p.dx*=-1;
-if(p.y<0||p.y>canvas.height)p.dy*=-1;
-
+ctx.fillStyle="rgba(0,0,0,0.08)";
 ctx.beginPath();
-ctx.fillStyle="rgba(255,255,255,0.5)";
-ctx.shadowBlur=8;
-ctx.shadowColor="white";
-ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.arc(i.x,i.y,i.r,0,Math.PI*2);
 ctx.fill();
-
 }
 
-requestAnimationFrame(animate);
+requestAnimationFrame(draw);
 }
 
-animate();
-
+draw();
 }
 
-// ONLY RUN AFTER PAGE LOAD
-if(document.readyState==="complete"){
-startParticles();
-}else{
-window.addEventListener("load",startParticles);
+/* FOG SYSTEM */
+const fogCanvas = document.getElementById("fog");
+if(fogCanvas){
+const f = fogCanvas.getContext("2d");
+fogCanvas.width = window.innerWidth;
+fogCanvas.height = window.innerHeight;
+
+let t = 0;
+
+function fog(){
+f.clearRect(0,0,fogCanvas.width,fogCanvas.height);
+
+for(let i=0;i<6;i++){
+f.fillStyle="rgba(200,200,200,0.05)";
+f.beginPath();
+
+f.arc(
+Math.sin(t/50 + i)*200 + fogCanvas.width/2,
+Math.cos(t/60 + i)*100 + fogCanvas.height/2,
+200,
+0,
+Math.PI*2
+);
+
+f.fill();
 }
 
-})();
+t++;
+requestAnimationFrame(fog);
+}
+
+fog();
+}
+
+});
