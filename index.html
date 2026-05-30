@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Serpent’s Arcade</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Serpent’s Secret Arcade</h1>
+<p>Choose your destiny</p>
+
+<button onclick="start()">Start</button>
+<button onclick="load()">Continue</button>
+
+<script>
+function start(){
+localStorage.setItem("save", JSON.stringify({level:1,hp:100,area:"forest"}));
+location.href="world/map.html";
+}
+
+function load(){
+if(!localStorage.getItem("save")) return alert("No save found");
+location.href="world/map.html";
+}
+</script>
+
+</body>
+</html>
