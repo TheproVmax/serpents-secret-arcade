@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Serpent's Secret Arcade</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="hero">
+
+<h1>Serpent's Secret Arcade</h1>
+
+<p>
+Inspired by The Serpent's Secret
+</p>
+
+<button onclick="newGame()">
+Start Adventure
+</button>
+
+<button onclick="continueGame()">
+Continue
+</button>
+
+</div>
+
+<script>
+
+function newGame(){
+
+localStorage.setItem(
+"save",
+JSON.stringify({
+level:1,
+hp:100,
+xp:0,
+area:"map"
+})
+);
+
+window.location.href="world/map.html";
+
+}
+
+function continueGame(){
+
+const save = localStorage.getItem("save");
+
+if(!save){
+alert("No save found.");
+return;
+}
+
+window.location.href="world/map.html";
+
+}
+
+</script>
+
+</body>
+</html>
