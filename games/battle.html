@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Battle</title>
+<title>RPG Battle</title>
+
 <style>
 
 body{
 margin:0;
-font-family:Arial;
-background:#1b1f2a;
+font-family:system-ui;
+background:#141824;
 color:white;
 text-align:center;
 }
@@ -19,83 +20,206 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+gap:10px;
 }
 
-.enemy{
-width:80px;
-height:80px;
-background:red;
-margin-bottom:20px;
+.row{
+display:flex;
+gap:40px;
+align-items:center;
 }
 
-.player{
-width:80px;
-height:80px;
-background:blue;
+.box{
+width:90px;
+height:90px;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+}
+
+.player{background:#3b82f6;}
+.enemy{background:#ef4444;}
+
+.ui{
 margin-top:20px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+justify-content:center;
+max-width:500px;
 }
 
 button{
-margin:10px;
-padding:10px 16px;
+padding:10px 14px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#2a2f3f;
+color:white;
+}
+
+button:hover{
+background:#3a425a;
+}
+
+.log{
+margin-top:15px;
+opacity:0.8;
+font-size:14px;
+max-width:400px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="screen">
 
-<div class="enemy" id="enemy"></div>
+<div class="row">
+<div class="box player">YOU</div>
+<div class="box enemy" id="enemyBox">SLIME</div>
+</div>
 
-<div id="log">Battle Start</div>
+<div>
+HP: <span id="php">100</span> |
+Enemy HP: <span id="ehp">60</span> |
+Mana: <span id="mana">50</span>
+</div>
 
-<div class="player"></div>
+<div class="ui">
 
 <button onclick="attack()">Attack</button>
+<button onclick="fire()">Fire</button>
+<button onclick="lightning()">Lightning</button>
 <button onclick="heal()">Heal</button>
+<button onclick="poison()">Poison</button>
+<button onclick="stun()">Stun</button>
+
+</div>
+
+<div class="log" id="log">Battle begins...</div>
 
 </div>
 
 <script>
 
-let enemyHP = 50;
 let playerHP = 100;
+let enemyHP = 60;
+let mana = 50;
 
-function attack(){
-enemyHP -= 10;
-log("You hit the enemy");
+let enemyStunned = 0;
+let enemyPoison = 0;
 
-if(enemyHP <= 0){
-log("Enemy defeated");
-return;
+function update(){
+document.getElementById("php").innerText = playerHP;
+document.getElementById("ehp").innerText = enemyHP;
+document.getElementById("mana").innerText = mana;
 }
 
-enemyTurn();
+function log(t){
+document.getElementById("log").innerText = t;
+}
+
+/* BASIC ATTACK */
+function attack(){
+enemyHP -= 10;
+log("You attack!");
+
+endTurn();
+}
+
+/* SPELLS */
+function fire(){
+if(mana < 10) return log("Not enough mana");
+mana -= 10;
+enemyHP -= 15;
+log("Fire spell!");
+endTurn();
+}
+
+function lightning(){
+if(mana < 15) return log("Not enough mana");
+mana -= 15;
+enemyHP -= 20;
+enemyStunned = 1;
+log("Lightning hits and stuns!");
+endTurn();
 }
 
 function heal(){
-playerHP += 10;
-log("You healed");
-
-enemyTurn();
+if(mana < 10) return log("Not enough mana");
+mana -= 10;
+playerHP += 20;
+log("You heal yourself!");
+endTurn();
 }
 
-function enemyTurn(){
-playerHP -= 8;
+function poison(){
+if(mana < 12) return log("Not enough mana");
+mana -= 12;
+enemyPoison = 3;
+log("Enemy poisoned!");
+endTurn();
+}
 
-if(playerHP <= 0){
-log("You lost");
+function stun(){
+if(mana < 8) return log("Not enough mana");
+mana -= 8;
+enemyStunned = 2;
+log("Enemy stunned!");
+endTurn();
+}
+
+/* ENEMY AI */
+function enemyTurn(){
+
+if(enemyHP <= 0) return;
+
+if(enemyStunned > 0){
+enemyStunned--;
+log("Enemy is stunned!");
 return;
 }
 
-log("Enemy attacks");
+/* poison damage */
+if(enemyPoison > 0){
+enemyHP -= 5;
+enemyPoison--;
 }
 
-function log(text){
-document.getElementById("log").innerText = text;
+/* attack */
+playerHP -= 12;
+log("Enemy attacks!");
+
 }
+
+/* TURN SYSTEM */
+function endTurn(){
+
+update();
+
+if(enemyHP <= 0){
+log("Enemy defeated!");
+return;
+}
+
+if(playerHP <= 0){
+log("You lost...");
+return;
+}
+
+setTimeout(()=>{
+enemyTurn();
+update();
+},600);
+
+}
+
+update();
 
 </script>
 
