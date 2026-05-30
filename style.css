@@ -1,67 +1,94 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap');
 
+/* GLOBAL */
 body{
 margin:0;
 overflow:hidden;
 font-family:'Cinzel', serif;
 color:white;
 
+/* LIGHT “BLEACHED” FANTASY BACKGROUND */
 background:
-radial-gradient(circle at top,#dfe9f3,#b8c6db 60%,#8aa0c0);
+radial-gradient(circle at top,#e8f0ff,#b9c7dd 60%,#7f95b3);
 }
 
-/* HERO */
-.hero{
-position:absolute;
+/* PARTICLES LAYER */
+#particles{
+position:fixed;
+top:0;
+left:0;
 width:100%;
 height:100%;
+z-index:0;
+pointer-events:none;
+}
+
+/* HERO CONTENT */
+.hero{
+position:relative;
+z-index:2;
+
+height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+
 text-align:center;
 }
 
+/* TITLE */
 h1{
-font-size:70px;
-color:#f7d774;
+font-size:64px;
+margin:0;
+
+color:#fff2b3;
+
 text-shadow:
-0 0 10px #000,
-0 0 30px #ffcc66,
-0 0 60px #ffcc66;
+0 0 10px rgba(0,0,0,0.4),
+0 0 25px rgba(255,220,120,0.6);
+
+letter-spacing:2px;
+
 animation:float 4s ease-in-out infinite;
 }
 
+/* TEXT */
 p{
 max-width:600px;
-font-size:20px;
+font-size:18px;
 opacity:0.9;
+margin-top:15px;
 }
 
 /* BUTTONS */
 .buttons{
-margin-top:20px;
+margin-top:25px;
 }
 
 button{
 padding:14px 28px;
 margin:10px;
+
 font-size:18px;
+
 border:none;
 border-radius:12px;
+
 cursor:pointer;
 
-background:#2a3d5c;
+background:#2c3f5f;
 color:white;
 
-box-shadow:0 0 20px rgba(0,0,0,0.6);
 transition:0.3s;
+
+box-shadow:0 6px 18px rgba(0,0,0,0.3);
 }
 
 button:hover{
-transform:scale(1.05);
+transform:scale(1.06);
 background:#3f5f8f;
-box-shadow:0 0 25px #6fa8ff;
+box-shadow:0 0 20px rgba(120,180,255,0.8);
 }
 
 /* FLOAT ANIMATION */
@@ -71,28 +98,22 @@ box-shadow:0 0 25px #6fa8ff;
 100%{transform:translateY(0px);}
 }
 
-/* WORLD GLOW ORBS */
+/* GLOW ORB */
 .glow{
 position:absolute;
 width:500px;
 height:500px;
-background:radial-gradient(circle,#ffcc66,transparent 70%);
-filter:blur(60px);
-opacity:0.2;
+
+background:radial-gradient(circle,#ffe08a,transparent 70%);
+filter:blur(70px);
+opacity:0.25;
+
 animation:pulse 5s infinite;
+z-index:-1;
 }
 
 @keyframes pulse{
 0%{transform:scale(1);}
 50%{transform:scale(1.3);}
 100%{transform:scale(1);}
-}
-
-/* PARTICLE CANVAS */
-#particles{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
 }
