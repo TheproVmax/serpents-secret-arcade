@@ -10,17 +10,17 @@
 
 <canvas id="particles"></canvas>
 
-<div class="hero">
+<div class="menu">
 
 <h1>Serpent’s Secret Arcade</h1>
 
-<p>
-A quiet doorway into another world.
-</p>
+<p>A small collection of trials</p>
 
 <div class="buttons">
+
 <button onclick="startGame()">Start</button>
 <button onclick="continueGame()">Continue</button>
+
 </div>
 
 </div>
@@ -43,6 +43,7 @@ if(!localStorage.getItem("save")){
 alert("No save found");
 return;
 }
+
 window.location.href="world/map.html";
 }
 </script>
